@@ -598,7 +598,7 @@ function renderMenu(){
     <button class="tile t-libre" data-act="libres"><span class="ico">＋</span><span class="tx"><b>Crear rutina libre</b><small>Niveles 7, 8, 9, 10 y FIG · nota de partida con Código FIG, FMG y USAG</small></span><span class="aa">›</span></button>
     <button class="tile t-obl" data-act="oblopen"><span class="ico">✓</span><span class="tx"><b>Revisión de rutinas obligatorias</b><small>Niveles 3 a 6 · elementos realizados y nota de partida</small></span><span class="aa">›</span></button>
     <div class="tile t-doc"><img src="img/fig.png" alt=""><span class="tx"><b>Código FIG vigente</b><small>Código de Puntuación GAM 2025–2028</small>
-      <span class="docbtns">${lnk(D.figES,'Español','dbtn')}${lnk(D.figEN,'English','dbtn')}</span></span></div>
+      <span class="docbtns">${lnk(D.figES,'Español','dbtn')}${lnk(D.figEN,'English','dbtn')}${lnk(D.figNL,'Boletines FIG','dbtn dbtn2')}</span></span></div>
     <div class="tile t-doc"><img src="img/usag.png" alt=""><span class="tx"><b>Programa USAG vigente</b><small>Programa de Desarrollo Varonil 2025–2028 · Manual de Competencia Juvenil (FMG)</small>
       <span class="docbtns">${lnk(D.usag,'Abrir','dbtn')}</span></span></div>
   </div>

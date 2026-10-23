@@ -76,6 +76,7 @@ button.tile:hover{border-color:var(--acc);transform:translateY(-1px)}
 .docbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .dbtn{background:var(--oro);color:#1d1600;font-weight:700;border-radius:10px;padding:7px 14px;text-decoration:none;font-size:14px}
 .dbtn:hover{filter:brightness(1.08)}
+.dbtn2{background:none;color:var(--oro);border:1px solid var(--oro)}
 .home-pie{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
 .home-pie small{flex-basis:100%;color:var(--muted)}
 .gate h1{font-style:italic;font-weight:800;letter-spacing:.05em}

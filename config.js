@@ -6,6 +6,7 @@ window.JUECEO = {
   docs: {
     figES: "docs/Codigo-FIG-2025-2028-ES.pdf",
     figEN: "https://www.gymnastics.sport/publicdir/rules/files/en_1.1%20-%20MAG%20Code%20of%20Points%202025-2028.pdf",
+    figNL: "https://www.gymnastics.sport/site/pages/newsletters-mag.php",
     usag: "docs/Programa-USAG-2025-2028.pdf"
   },
   api: "https://script.google.com/macros/s/AKfycbwsbrB3wZjbUGIfnLpvsSy5FwIZJA_9DedqcaMhNis50HbAzcx4XWIaFKmkDSP70Ynh/exec"
