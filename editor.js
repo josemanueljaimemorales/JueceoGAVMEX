@@ -585,14 +585,28 @@ function buildVista(n){
 }
 /* ---------- vistas ---------- */
 function render(){if(ui.view==='olist')return renderOList();if(ui.view==='oath')return renderOAth();ui.view==='menu'?renderMenu():ui.view==='list'?renderList():renderAthlete();}
+// Inicio: crear rutina libre, revisión de obligatorios, documentos vigentes (Código FIG y Programa USAG),
+// sugerencias y respaldo. Los enlaces de los documentos están en config.js (JUECEO.docs).
 function renderMenu(){
-  root.innerHTML=`<div class="top"><h1>Editor de rutinas</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>
-  <div class="menu"><button class="card big" data-act="libres"><span><b>Editar libres</b><small>Rutinas, NP, atletas e impresión</small></span><span class="aa">›</span></button>
-  <button class="card big" data-act="oblopen"><span><b>Editar obligatorios</b><small>Elementos hechos y nota de partida (niveles 3 a 6)</small></span><span class="aa">›</span></button></div>
-  <div class="actions printbar"><button class="btn ghost" data-act="respaldo">Descargar respaldo</button><button class="btn ghost" data-act="restaurar">Cargar respaldo</button><small>Tus rutinas se guardan solo en este equipo. Descarga un respaldo de vez en cuando, o para pasarlas a otro celular o compu.</small></div>`;
+  const D=(window.JUECEO&&window.JUECEO.docs)||{}, lnk=(u,t,c)=>u?`<a class="${c}" href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
+  root.innerHTML=`<header class="hero"><div class="hero-in">
+    <div class="marca"><span class="m1">JUECEO</span><span class="m2">GAV MEX</span></div>
+    <p class="lema">Herramienta para jueces de Gimnasia Artística Varonil</p>
+    <div class="logos"><img src="img/fig.png" alt="FIG"><img src="img/fmg.png" alt="Federación Mexicana de Gimnasia"><img src="img/usag.png" alt="USA Gymnastics"></div>
+  </div><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></header>
+  <div class="home">
+    <button class="tile t-libre" data-act="libres"><span class="ico">＋</span><span class="tx"><b>Crear rutina libre</b><small>Niveles 7, 8, 9, 10 y FIG · nota de partida con Código FIG, FMG y USAG</small></span><span class="aa">›</span></button>
+    <button class="tile t-obl" data-act="oblopen"><span class="ico">✓</span><span class="tx"><b>Revisión de rutinas obligatorias</b><small>Niveles 3 a 6 · elementos realizados y nota de partida</small></span><span class="aa">›</span></button>
+    <div class="tile t-doc"><img src="img/fig.png" alt=""><span class="tx"><b>Código FIG vigente</b><small>Código de Puntuación GAM 2025–2028</small>
+      <span class="docbtns">${lnk(D.figES,'Español','dbtn')}${lnk(D.figEN,'English','dbtn')}${lnk(D.figNL,'Boletines FIG','dbtn dbtn2')}</span></span></div>
+    <div class="tile t-doc"><img src="img/usag.png" alt=""><span class="tx"><b>Programa USAG vigente</b><small>Programa de Desarrollo Varonil 2025–2028 · Manual de Competencia Juvenil (FMG)</small>
+      <span class="docbtns">${lnk(D.usag,'Abrir','dbtn')}</span></span></div>
+  </div>
+  <div class="home-pie"><button class="btn" data-act="sugerir">✉ Enviar sugerencia</button><button class="btn ghost" data-act="respaldo">Descargar respaldo</button><button class="btn ghost" data-act="restaurar">Cargar respaldo</button>
+    <small>Tus rutinas se guardan solo en este equipo. Descarga un respaldo de vez en cuando, o para pasarlas a otro celular o compu.</small></div>`;
 }
 function renderList(){
-  let h=`<div class="top"><button class="back" data-act="menu">← Editor</button><h1>Editar libres</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>`;
+  let h=`<div class="top"><button class="back" data-act="menu">← Inicio</button><h1>Rutinas libres</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>`;
   h+=`<div class="actions"><button class="btn" data-act="addform">Agregar atleta</button><button class="btn ${ui.delMode?'danger':'ghost'}" data-act="delmode">${ui.delMode?'Terminar de eliminar':'Eliminar atleta'}</button></div>`;
   if(ui.adding)h+=`<div class="score addbox"><label>Nombre del atleta<input id="newName" autocomplete="off" placeholder="Ej. JUAN P"></label>
     <label>Nivel<select id="newLevel">${NIVELES.map(n=>`<option ${n==='N8'?'selected':''}>${n}</option>`).join('')}</select></label>
@@ -605,7 +619,6 @@ function renderList(){
     h+=`<button class="card" data-act="open" data-v="${esc(n)}"><span><b>${esc(n)}</b><span class="lv">${esc(a.nivel)}</span></span><span class="aa">${f1(t.aa)}${APS.reduce((x,[k])=>x+nAv(t[k]),0)?`<small class="warn"> ⚠${APS.reduce((x,[k])=>x+nAv(t[k]),0)}</small>`:''}</span></button>`;}
   h+=`</div><div class="actions"><button class="btn" data-act="export">Descargar Excel actualizado</button></div>`;
   h+=`<div class="actions printbar"><button class="btn" data-act="print">Imprimir rutinas</button><small>Una hoja tamaño carta horizontal por atleta. En el diálogo elige "Guardar como PDF".</small></div>`;
-  h+=`<div class="actions printbar"><button class="btn" data-act="dprint">Descargar división en PDF (grupal)</button><small>Para que los atletas aprendan su rutina: por nivel, hasta 6 atletas por hoja, con 1er enlace, 2do enlace y enlace a salir.</small></div>`;
   root.innerHTML=h;
 }
 function metaLine(r,res,i){
@@ -712,6 +725,7 @@ root.addEventListener('click',e=>{
   if(act==='export')return exportExcel();
   if(act==='respaldo')return descargarRespaldo();
   if(act==='restaurar')return cargarRespaldo();
+  if(act==='sugerir')return window.abrirSugerencia&&window.abrirSugerencia();
   if(act==='menu'){ui.view='menu';return render();}
   if(act==='libres'){ui.view='list';ui.delMode=false;ui.adding=false;return render();}
   if(act==='addform'){ui.adding=!ui.adding;ui.addErr='';ui.delMode=false;ui.delAsk=null;render();document.getElementById('newName')?.focus();return;}
@@ -726,7 +740,6 @@ root.addEventListener('click',e=>{
   if(act==='delno'){ui.delAsk=null;return render();}
   if(act==='delok'){const nm=ui.delAsk;delete S.atletas[nm];ORDER=ORDER.filter(x=>x!==nm);S.bajas=[...new Set([...(S.bajas||[]),nm])];ui.delAsk=null;save();return render();}
   if(act==='print')return printAll();
-  if(act==='dprint')return printAll(divPrintHTML,DIV_PREF);
   if(act==='edit'){ui.open=ui.open===i?-1:i;ui.replace=-1;ui.q='';return render();}
   if(act==='up'&&i>0){[rows[i-1],rows[i]]=[rows[i],rows[i-1]];ui.open=-1;save();return render();}
   if(act==='down'&&i<rows.length-1){[rows[i+1],rows[i]]=[rows[i],rows[i+1]];ui.open=-1;save();return render();}
@@ -815,7 +828,7 @@ function oblSeedFromRows(rows){
 }
 function renderOList(){
   const O=S.obl;
-  let h=`<div class="top"><button class="back" data-act="menu">← Editor</button><h1>Editar obligatorios</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>`;
+  let h=`<div class="top"><button class="back" data-act="menu">← Inicio</button><h1>Rutinas obligatorias</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>`;
   h+=`<div class="actions"><button class="btn" data-act="oadd">Agregar atleta</button><button class="btn ${ui.odel?'danger':'ghost'}" data-act="odelmode">${ui.odel?'Terminar de eliminar':'Eliminar atleta'}</button></div>`;
   if(ui.oadding)h+=`<div class="score addbox"><label>Nombre del atleta<input id="oName" autocomplete="off"></label><label>Nivel<select id="oLevel">${['3','4','5','6'].map(n=>`<option value="${n}">Nivel ${n}</option>`).join('')}</select></label>
     ${ui.oerr?`<div class="badge b">${esc(ui.oerr)}</div>`:''}<div class="actions"><button class="btn" data-act="oaddok">Agregar</button><button class="btn ghost" data-act="oaddno">Cancelar</button></div></div>`;

@@ -9,7 +9,8 @@ App: https://josemanueljaimemorales.github.io/JueceoGAVMEX/ · Administrador: `a
 |---|---|---|
 | Atletas y rutinas de cada juez | En su propio equipo (memoria del navegador) | El juez |
 | Código (elementos y valores), obligatorios y la app | Este repositorio (`datos/*.json`, `editor.js`…) | El administrador: al actualizar el repo, les llega a todos la próxima vez que abran la app |
-| Códigos de acceso y registro de entradas | Hoja de Google del administrador + Apps Script (`apps-script/Codigo.gs`) | El administrador, desde `admin.html` (o en la hoja) |
+| Código FIG (español) y Programa USAG | `docs/*.pdf`; el Código FIG en inglés enlaza al sitio oficial de la FIG (enlaces en `config.js`) | El administrador |
+| Códigos de acceso, registro de entradas y sugerencias | Hoja de Google del administrador + Apps Script (`apps-script/Codigo.gs`) | El administrador, desde `admin.html` (o en la hoja) |
 
 - Las rutinas **no** se suben a ningún lado. Para pasarlas a otro equipo o no perderlas: menú → **Descargar respaldo** / **Cargar respaldo**.
 - La app funciona sin internet hasta **3 días** desde la última revisión de la licencia (`GRACIA_DIAS` en `Codigo.gs`).
@@ -23,6 +24,9 @@ App: https://josemanueljaimemorales.github.io/JueceoGAVMEX/ · Administrador: `a
    reactivas, vuelve a escribir su código y las tiene igual.
 4. El panel muestra licencias activas, jueces que entraron hoy y en 7 días, último acceso y entradas de cada uno, y
    la lista de accesos (fecha, juez, equipo, rechazos).
+
+Las **sugerencias** que mandan los jueces (botón "Enviar sugerencia" del inicio) llegan a la pestaña Sugerencias del
+panel y a la hoja "Sugerencias" (máximo 10 al día por licencia).
 
 La hoja también se puede editar a mano: desmarcar **Activo** = cancelar; borrar la celda **Equipos** = liberar.
 

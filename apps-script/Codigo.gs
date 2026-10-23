@@ -6,6 +6,7 @@
      Licencias: un renglón por juez. Activo = casilla (desmarcar = cancelar). Vence = fecha (vacío = sin vencimiento).
                 Equipos = lista de equipos ligados (borrar la celda = liberar equipos).
      Accesos:   cada entrada a la app, activación y rechazo (fecha, código, juez, equipo, navegador).
+     Sugerencias: las que mandan los jueces desde la app (Estado: nueva / atendida).
 
    Contraseña del panel: Configuración del proyecto (engrane) > Propiedades de la secuencia de comandos >
    agregar CLAVE_ADMIN. Nunca la escribas en este archivo ni en el repositorio. */
@@ -13,6 +14,8 @@
 var HOJA_LIC = 'Licencias', HOJA_ACC = 'Accesos';
 var COLS = ['Codigo', 'Nombre', 'Nota', 'Activo', 'MaxEquipos', 'Vence', 'Creada', 'Equipos', 'UltimoAcceso', 'Entradas'];
 var COLS_ACC = ['Fecha', 'Codigo', 'Nombre', 'Equipo', 'Navegador', 'Evento'];
+var HOJA_SUG = 'Sugerencias', COLS_SUG = ['Id', 'Fecha', 'Codigo', 'Nombre', 'Texto', 'Estado'];
+var SUG_POR_DIA = 10;         // máximo de sugerencias por licencia al día
 var GRACIA_DIAS = 3;          // días que la app funciona sin internet con el último permiso válido
 var ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
@@ -66,6 +69,7 @@ function atender(p) {
   var lock = LockService.getScriptLock(); lock.waitLock(20000);
   try {
     if (p.accion === 'validar') return validar(p);
+    if (p.accion === 'sugerir') return sugerir(p);
     if (String(p.accion || '').indexOf('admin_') === 0) {
       var clave = PropertiesService.getScriptProperties().getProperty('CLAVE_ADMIN');
       if (!clave) return { ok: false, error: 'Falta definir CLAVE_ADMIN en las propiedades del script.' };
@@ -74,6 +78,7 @@ function atender(p) {
       if (p.accion === 'admin_crear') return crear(p);
       if (p.accion === 'admin_cambiar') return cambiar(p);
       if (p.accion === 'admin_borrar') return borrar(p);
+      if (p.accion === 'admin_sugerencia') return cambiarSugerencia(p);
     }
     return { ok: false, error: 'Acción desconocida.' };
   } finally { lock.releaseLock(); }
@@ -112,7 +117,7 @@ function listar(p) {
       return { fecha: iso(r[0]), codigo: r[1], nombre: r[2], equipo: r[3], navegador: r[4], evento: r[5] };
     });
   }
-  return { ok: true, licencias: licencias().map(publica), accesos: acc };
+  return { ok: true, licencias: licencias().map(publica), accesos: acc, sugerencias: sugerencias().reverse() };
 }
 function nuevoCodigo(existentes) {
   for (var k = 0; k < 20; k++) {
@@ -143,3 +148,34 @@ function cambiar(p) {
   return { ok: true, licencia: publica(l) };
 }
 function borrar(p) { var l = buscar(p); hoja(HOJA_LIC, COLS).deleteRow(l.fila); return { ok: true }; }
+
+// Texto que escribe un juez: sin fórmulas (una celda que empieza con = + - @ se guarda como texto).
+function seguro(v, max) { v = String(v || '').trim().slice(0, max); return /^[=+\-@]/.test(v) ? "'" + v : v; }
+
+// Sugerencia desde la app: solo con un código existente y máximo SUG_POR_DIA al día por licencia.
+function sugerir(p) {
+  var c = limpio(p.codigo), texto = seguro(p.texto, 2000);
+  if (!texto) return { ok: false, error: 'Escribe tu sugerencia.' };
+  var l = licencias().filter(function (x) { return x.Codigo === c; })[0];
+  if (!l) return { ok: false, motivo: 'no' };
+  var hoy = new Date().toDateString();
+  var deHoy = sugerencias().filter(function (x) { return x.codigo === c && new Date(x.fecha).toDateString() === hoy; }).length;
+  if (deHoy >= SUG_POR_DIA) return { ok: false, error: 'Ya enviaste ' + SUG_POR_DIA + ' sugerencias hoy. Inténtalo mañana.' };
+  hoja(HOJA_SUG, COLS_SUG).appendRow([Utilities.getUuid(), new Date(), c, seguro(l.Nombre, 200), texto, 'nueva']);
+  return { ok: true };
+}
+function sugerencias() {
+  var h = hoja(HOJA_SUG, COLS_SUG), n = h.getLastRow();
+  if (n < 2) return [];
+  return h.getRange(2, 1, n - 1, COLS_SUG.length).getValues().map(function (r, i) {
+    return { fila: i + 2, id: String(r[0]), fecha: iso(r[1]), codigo: limpio(r[2]), nombre: String(r[3] || ''), texto: String(r[4] || ''), estado: String(r[5] || 'nueva') };
+  }).filter(function (x) { return x.id; });
+}
+function cambiarSugerencia(p) {
+  var s = sugerencias().filter(function (x) { return x.id === String(p.id || ''); })[0];
+  if (!s) return { ok: false, error: 'No existe esa sugerencia.' };
+  var h = hoja(HOJA_SUG, COLS_SUG);
+  if (p.borrar) h.deleteRow(s.fila);
+  else h.getRange(s.fila, 6).setValue(p.estado === 'atendida' ? 'atendida' : 'nueva');
+  return { ok: true };
+}
