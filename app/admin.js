@@ -102,7 +102,7 @@ function vistaAcc(){
 }
 
 async function copiar(t){try{await navigator.clipboard.writeText(t);alert('Copiado.');}catch(e){prompt('Copia el texto:',t);}}
-const finApp=()=>location.href.replace(/admin\.html.*$/,'');
+const finApp=()=>location.origin+location.pathname.replace(/admin(\.html)?$/,'');
 
 async function accion(el){
   const a=el.dataset.a,id=el.dataset.id,l=D.licencias.find(x=>x.codigo===id);
