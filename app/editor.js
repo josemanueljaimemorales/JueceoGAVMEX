@@ -33,7 +33,7 @@ function txt(r){const c=r&&r.k&&CAT[r.k];return ' '+nk((r?.n||'')+' '+(c?c.d+' '
 const esBalanza=r=>r.k==='PISO|1|61'||r.k==='PISO|1|62'||/ (arabesc[a-z]*|fli(c|ck|k)( flac)? facial|salto( con)?( [a-z0-9/]+)? giro a facial) /.test(txt(r));
 // Paralelas: elementos que llegan a manos balanceando atrás, y lo que puede seguir sin valor en la misma dirección.
 // Paralelas: elementos que terminan balanceando atrás. La braquial subida de pecho, si no lleva corte adelante,
-// termina por naturaleza con un vuelo atrás (criterio de Manu).
+// termina por naturaleza con un vuelo atrás (criterio del autor).
 const llegaAManos=r=>{const t=txt(r);return r.k==='PARALELAS|2|1'||/ (vuelo|imp(ulso)? a manos) /.test(t)||((/ (braq(uial)? subida de pecho|pechada) /.test(t)||r.k==='PARALELAS|1|1')&&!/ corte /.test(t))||(/ moy /.test(t)&&!/ (ap inv|apoyo invertido|handstand|hdst|braq|braquial|upper arm|mortal|salto|tippelt|nolet|giraldo) /.test(t));};
 const PV_OPC={medio:'Cambio (½ giro)',giro:'Giro completo',healy:'Healy',gatson:'Gatson'};
 // Barra fija: después de llegar a parada de manos (alemana/kip a manos) puede hacer un cambio sencillo sin valor y seguir a gigante.
@@ -85,7 +85,7 @@ function corregir(qn,ap,tab){const voc=vocabulario(ap,tab),set=new Set(voc);let 
     let mejor=null,dm=w.length>=7?2:1;for(const c of voc){const d=distancia(w,c.slice(0,Math.max(w.length,c.length)));if(d<=dm&&(!mejor||d<dm)){mejor=c;dm=d;}}
     if(mejor){cambio=true;return mejor;}return w;});
   return cambio?out.join(' '):null;}
-// Nombres de Manu por aparato: en arzón "círculo" = molino (círculo en arzones, en la orilla…); en fija los molinos
+// Nombres de uso común por aparato: en arzón "círculo" = molino (círculo en arzones, en la orilla…); en fija los molinos
 // atrás se llaman "gigante" (los molinos adelante siguen siendo molinos). También mientras se escribe ("cir", "gig").
 function nombresAparato(ap,qn){
   if(ap==='ARZON')return qn.replace(/\bcirc?(u(l(o(s)?)?)?)?\b/g,m=>m.length>=3?'molino':m);
@@ -146,7 +146,7 @@ function apodoDe(k){const c=new Map(),desc=nk(CAT[k]?.d||'');
 function nombreDe(k,alias){const e=CAT[k];if(!e)return'';const cap=x=>x.replace(/^./,c=>c.toUpperCase());
   if(alias)return cap(alias);const ap=apodoDe(k);if(ap)return ap;
   const m=/\(([A-ZÁÉÍÓÚÜ][^()]*)\)\s*\.?\s*$/.exec(e.d);if(m)return m[1].trim();
-  // En fija los molinos atrás se llaman gigante (Manu).
+  // En fija los molinos atrás se llaman gigante.
   return k.startsWith('FIJA|')?e.d.replace(/^Molino atrás/,'Gigante'):e.d;}
 function rowFromKey(k,name){
   const e=CAT[k]; const p=k.split('|');
@@ -219,7 +219,7 @@ function medioGiros(r){const t=' '+nk(r.n)+' ';
   const en=' '+nk((r.k&&CAT[r.k]?.en)||'')+' ';
   if(/ (also|or) /.test(en))return 0;
   m=en.match(/ (\d)\/(\d) (t|turn|twist) /); return m?Math.round(2*m[1]/m[2]):0;}
-// Piso, todos los niveles (Código FIG 2025-2028, art. 10.2.2 punto 5, y criterio de Manu):
+// Piso, todos los niveles (Código FIG 2025-2028, art. 10.2.2 punto 5, y criterio del autor):
 // - Sin conexión en contrasaltos: el segundo elemento debe salir en la dirección con la que termina el primero
 //   (un medio giro impar invierte la dirección: 1½ o 2½ giros atrás terminan hacia adelante).
 // - Sin conexión entre dos mortales simples con giros.
@@ -247,7 +247,7 @@ function cvPair(a,b,ap,nivel){
     if(a.grp===4&&b.grp===4)return 0;
     if(va>=.4&&vb>=.4)return .2;
     if((va>=.4&&(vb===.2||vb===.3))||(vb>=.4&&(va===.2||va===.3)))return .1;
-    // N7 y N8 (vigente, criterio de Manu): B+C, C+B y C+C también dan 0.1, además de las conexiones FIG.
+    // N7 y N8 (vigente, criterio del autor): B+C, C+B y C+C también dan 0.1, además de las conexiones FIG.
     // N9, N10 y FIG: solo las bonificaciones del Código FIG.
     if((nivel==='N7'||nivel==='N8')&&[.2,.3].includes(va)&&[.2,.3].includes(vb)&&!(va===.2&&vb===.2))return .1;
     return 0;
@@ -497,7 +497,7 @@ function compute(ap,rows,nivel,plantada,opt){
   }
   // Bonos
   if(n8&&dis&&dis.val>=.3)res.bon+=dis.val>=.5?.4:dis.val>=.4?.3:.2;
-  // N8: el bono por plantar la salida no se calcula aquí; lo deciden los jueces en el momento (criterio de Manu).
+  // N8: el bono por plantar la salida no se calcula aquí; lo deciden los jueces en el momento (criterio del autor).
   if(plantada&&!usag){
     if(ap!=='ARZON'){const last=ap==='PISO'?items.filter(x=>res.counted.has(x.i)).pop():dis;
       if(last&&last.val>=.3)res.bon+=.1; else res.notes.push('Bono por plantar requiere salida C o mayor.');}
