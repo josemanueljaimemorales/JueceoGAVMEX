@@ -13,7 +13,7 @@ Administrador: `admin.html` de la app.
 | Código FIG (español) y Programa USAG | `app/docs/*.pdf`; el Código FIG en inglés enlaza al sitio oficial de la FIG (enlaces en `app/config.js`) | El administrador |
 | Códigos de acceso, registro de entradas y sugerencias | Hoja de Google del administrador + Apps Script (`apps-script/Codigo.gs`) | El administrador, desde `admin.html` (o en la hoja) |
 
-- Las rutinas **no** se suben a ningún lado. Para pasarlas a otro equipo o no perderlas: menú → **Descargar respaldo** / **Cargar respaldo**.
+- Las rutinas **no** se suben a ningún lado. Desde el inicio se imprimen o guardan en PDF y se descargan en Excel. La rutina de ejemplo (atleta EJEMPLO) sale de `app/datos/ejemplo.json` y aparece una sola vez en cada equipo.
 - La app funciona sin internet hasta **3 días** desde la última revisión de la licencia (`GRACIA_DIAS` en `Codigo.gs`).
 
 ## Acceso

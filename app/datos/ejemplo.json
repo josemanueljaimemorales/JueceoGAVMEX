@@ -1,61 +1,386 @@
-{"nombre":"EJEMPLO","nivel":"FIG",
- "fuente":"Shinnosuke Oka (JPN), all-around de los Juegos Olímpicos París 2024, recalificado con el Código FIG 2025-2028 (magnastics.wordpress.com, 8-sep-2024).",
- "r":{
-  "PISO":[
-   {"k":"PISO|3|48","n":"Doble mortal atrás extendido con 1/1 giro"},
-   {"k":"PISO|4|3","n":"Mortal adelante extendido con 1/1 giro","c":true},
-   {"k":"PISO|4|5","n":"Mortal adelante extendido con 5/2 giro"},
-   {"k":"PISO|3|5","n":"Doble mortal atrás agrupado con 2/1 giro"},
-   {"k":"PISO|1|100","n":"Flair con giro >270° al apoyo invertido y bajar a flair"},
-   {"k":"PISO|1|81","n":"Gogoladze"},
-   {"k":"PISO|1|10","n":"Manna y elevarse al apoyo invertido"},
-   {"k":"PISO|1|45","n":"Rodar en carpa al apoyo invertido (Endo)"},
-   {"k":"PISO|4|9","n":"Mortal atrás extendido con 2/1 giro"},
-   {"k":"PISO|4|10","n":"Mortal atrás extendido con 5/2 giro"}],
-  "ARZON":[
-   {"k":"ARZON|1|39","n":"Impulso atrás con ¼ giro por el apoyo invertido en 1 arco"},
-   {"k":"ARZON|2|54","n":"Busnari"},
-   {"k":"ARZON|2|29","n":"Eichorn"},
-   {"k":"ARZON|2|28","n":"Spindle 1/1 en apoyo lateral, arco entre las manos"},
-   {"k":"ARZON|3|4","n":"Desplazamiento 3/3 en flair en apoyo lateral sobre los 2 arcos"},
-   {"k":"ARZON|3|34","n":"Magyar en flair"},
-   {"k":"ARZON|3|40","n":"Sivado en flair"},
-   {"k":"ARZON|3|32","n":"Desplazamiento adelante en flair en apoyo transversal (2/3)"},
-   {"k":"ARZON|2|14","n":"Flair en apoyo transversal entre los arcos"},
-   {"k":"ARZON|2|1","n":"Molino en apoyo lateral"},
-   {"k":"ARZON|4|5","n":"SDA al apoyo invertido 3/3 con 450°"}],
-  "ANILLOS":[
-   {"k":"ANILLOS|3|71","n":"Dominación atrás a hirondelle"},
-   {"k":"ANILLOS|2|10","n":"Hirondelle"},
-   {"k":"ANILLOS|3|77","n":"Dominación atrás a cristo invertido"},
-   {"k":"ANILLOS|1|81","n":"Dominación atrás al apoyo invertido"},
-   {"k":"ANILLOS|1|45","n":"Jonasson"},
-   {"k":"ANILLOS|1|44","n":"Yamawaki"},
-   {"k":"ANILLOS|3|16","n":"Honma a cristo"},
-   {"k":"ANILLOS|1|81","n":"Molino adelante al apoyo invertido"},
-   {"k":"ANILLOS|1|20","n":"Impulso por el apoyo invertido"},
-   {"k":"ANILLOS|4|54","n":"Doble mortal atrás extendido con 2/1 giro"}],
-  "SALTO":[
-   {"k":"SALTO|1|131","n":"Kasamatsu extendido con 3/2 giro (Driggs)"}],
-  "PARALELAS":[
-   {"k":"PARALELAS|1|52","n":"Dominación atrás y mortal adelante en carpa al apoyo"},
-   {"k":"PARALELAS|3|107","n":"Felge con ½ giro al apoyo invertido"},
-   {"k":"PARALELAS|3|106","n":"Felge al apoyo invertido"},
-   {"k":"PARALELAS|3|29","n":"Molino atrás con Diamidov al apoyo invertido"},
-   {"k":"PARALELAS|2|35","n":"Makuts"},
-   {"k":"PARALELAS|2|75","n":"Healy"},
-   {"k":"PARALELAS|2|106","n":"5/4 mortal adelante piernas abiertas a braquial"},
-   {"k":"PARALELAS|3|5","n":"Bhavsar"},
-   {"k":"PARALELAS|3|4","n":"Tippelt"},
-   {"k":"PARALELAS|4|11","n":"Doble mortal adelante agrupado con ½ giro"}],
-  "FIJA":[
-   {"k":"FIJA|3|65","n":"Adler con 1/1 giro a presa palmar"},
-   {"k":"FIJA|3|64","n":"Adler con ½ giro"},
-   {"k":"FIJA|2|89","n":"Kolman"},
-   {"k":"FIJA|2|16","n":"Tkatchev extendido"},
-   {"k":"FIJA|2|15","n":"Tkatchev"},
-   {"k":"FIJA|3|81","n":"Impulso atrás metiendo piernas a la suspensión dorsal"},
-   {"k":"FIJA|1|70","n":"Molino checo"},
-   {"k":"FIJA|3|87","n":"Koste"},
-   {"k":"FIJA|3|45","n":"Stalder piernas juntas por el apoyo invertido"},
-   {"k":"FIJA|4|41","n":"Watanabe"}]}}
+{
+ "nombre": "EJEMPLO",
+ "nivel": "FIG",
+ "fuente": "Shinnosuke Oka (JPN), all-around de los Juegos Olímpicos París 2024, recalificado con el Código FIG 2025-2028 (magnastics.wordpress.com, 8-sep-2024). Ajustada por el administrador (23-oct-2026).",
+ "r": {
+  "PISO": [
+   {
+    "n": "Doble mortal atrás agrupado con 2/1 giro",
+    "k": "PISO|3|5",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "5",
+    "nc": true
+   },
+   {
+    "n": "Mortal atrás extendido con 5/2 giro",
+    "k": "PISO|4|10",
+    "t": "C",
+    "l": "D",
+    "g": 4,
+    "id": "10",
+    "c": true
+   },
+   {
+    "n": "Doble mortal en V adelante",
+    "k": "PISO|2|17",
+    "t": "C",
+    "l": "E",
+    "g": 2,
+    "id": "17",
+    "c": false,
+    "nc": true
+   },
+   {
+    "n": "Mortal adelante extendido con 5/2 giro",
+    "k": "PISO|4|5",
+    "t": "C",
+    "l": "E",
+    "g": 4,
+    "id": "5",
+    "nc": true
+   },
+   {
+    "n": "Flair con giro >270° al apoyo invertido y bajar a flair",
+    "k": "PISO|1|100",
+    "t": "C",
+    "l": "D",
+    "g": 1,
+    "id": "100"
+   },
+   {
+    "n": "Manna y elevarse al apoyo invertido",
+    "k": "PISO|1|10",
+    "t": "C",
+    "l": "D",
+    "g": 1,
+    "id": "10"
+   },
+   {
+    "n": "Mortal atrás extendido con 2/1 giro",
+    "k": "PISO|4|9",
+    "t": "C",
+    "l": "C",
+    "g": 4,
+    "id": "9",
+    "nc": true
+   },
+   {
+    "n": "Doble mortal atrás extendido con 1/1 giro",
+    "k": "PISO|3|48",
+    "t": "C",
+    "l": "F",
+    "g": 3,
+    "id": "48"
+   }
+  ],
+  "ARZON": [
+   {
+    "n": "Impulso atrás con ¼ giro por el apoyo invertido en 1 arco",
+    "k": "ARZON|1|39",
+    "t": "C",
+    "l": "C",
+    "g": 1,
+    "id": "39"
+   },
+   {
+    "n": "Busnari",
+    "k": "ARZON|2|54",
+    "t": "C",
+    "l": "F",
+    "g": 2,
+    "id": "54"
+   },
+   {
+    "n": "Eichorn",
+    "k": "ARZON|2|29",
+    "t": "C",
+    "l": "E",
+    "g": 2,
+    "id": "29"
+   },
+   {
+    "n": "Spindle 1/1 en apoyo lateral, arco entre las manos",
+    "k": "ARZON|2|28",
+    "t": "C",
+    "l": "D",
+    "g": 2,
+    "id": "28"
+   },
+   {
+    "n": "Desplazamiento 3/3 en flair en apoyo lateral sobre los 2 arcos",
+    "k": "ARZON|3|4",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "4"
+   },
+   {
+    "n": "Magyar en flair",
+    "k": "ARZON|3|34",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "34"
+   },
+   {
+    "n": "Sivado en flair",
+    "k": "ARZON|3|40",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "40"
+   },
+   {
+    "n": "SDA al apoyo invertido 3/3 con 450°",
+    "k": "ARZON|4|5",
+    "t": "C",
+    "l": "E",
+    "g": 4,
+    "id": "5"
+   }
+  ],
+  "ANILLOS": [
+   {
+    "n": "Dominación atrás a hirondelle",
+    "k": "ANILLOS|3|71",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "71"
+   },
+   {
+    "n": "Hirondelle",
+    "k": "ANILLOS|2|10",
+    "t": "C",
+    "l": "D",
+    "g": 2,
+    "id": "10"
+   },
+   {
+    "n": "Dominación atrás a cristo invertido",
+    "k": "ANILLOS|3|77",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "77"
+   },
+   {
+    "n": "Dominación atrás al apoyo invertido",
+    "k": "ANILLOS|1|81",
+    "t": "C",
+    "l": "C",
+    "g": 1,
+    "id": "81"
+   },
+   {
+    "n": "Jonasson",
+    "k": "ANILLOS|1|45",
+    "t": "C",
+    "l": "C",
+    "g": 1,
+    "id": "45"
+   },
+   {
+    "n": "Yamawaki",
+    "k": "ANILLOS|1|44",
+    "t": "C",
+    "l": "B",
+    "g": 1,
+    "id": "44"
+   },
+   {
+    "n": "Honma a cristo",
+    "k": "ANILLOS|3|16",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "16"
+   },
+   {
+    "n": "Impulso por el apoyo invertido",
+    "k": "ANILLOS|1|20",
+    "t": "C",
+    "l": "B",
+    "g": 1,
+    "id": "20"
+   },
+   {
+    "n": "Doble mortal atrás extendido con 2/1 giro",
+    "k": "ANILLOS|4|54",
+    "t": "C",
+    "l": "F",
+    "g": 4,
+    "id": "54"
+   }
+  ],
+  "SALTO": [
+   {
+    "n": "Dragulescu",
+    "k": "SALTO|2|226",
+    "t": "C",
+    "g": 2,
+    "id": "226",
+    "v": 5.2
+   },
+   {
+    "n": "Kasamatsu extendido con 3/2 giro (Driggs)",
+    "k": "SALTO|1|131",
+    "t": "C",
+    "g": 1,
+    "id": "131",
+    "v": 4.8
+   }
+  ],
+  "PARALELAS": [
+   {
+    "n": "Dominación atrás y mortal adelante en carpa al apoyo",
+    "k": "PARALELAS|1|52",
+    "t": "C",
+    "l": "D",
+    "g": 1,
+    "id": "52"
+   },
+   {
+    "n": "Felge con ½ giro al apoyo invertido",
+    "k": "PARALELAS|3|107",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "107"
+   },
+   {
+    "n": "Molino atrás con Diamidov al apoyo invertido",
+    "k": "PARALELAS|3|29",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "29"
+   },
+   {
+    "n": "Makuts",
+    "k": "PARALELAS|2|35",
+    "t": "C",
+    "l": "E",
+    "g": 2,
+    "id": "35"
+   },
+   {
+    "n": "5/4 mortal adelante piernas abiertas a braquial",
+    "k": "PARALELAS|2|106",
+    "t": "C",
+    "l": "D",
+    "g": 2,
+    "id": "106"
+   },
+   {
+    "n": "Bhavsar",
+    "k": "PARALELAS|3|5",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "5"
+   },
+   {
+    "n": "Tippelt",
+    "k": "PARALELAS|3|4",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "4"
+   },
+   {
+    "n": "Dominación ad. al apoyo.",
+    "k": "PARALELAS|1|1",
+    "t": "C",
+    "l": "A",
+    "g": 1,
+    "id": "1"
+   },
+   {
+    "n": "Doble mortal adelante agrupado con ½ giro",
+    "k": "PARALELAS|4|11",
+    "t": "C",
+    "l": "E",
+    "g": 4,
+    "id": "11"
+   }
+  ],
+  "FIJA": [
+   {
+    "n": "Adler con 1/1 giro a presa palmar",
+    "k": "FIJA|3|65",
+    "t": "C",
+    "l": "E",
+    "g": 3,
+    "id": "65"
+   },
+   {
+    "n": "Adler con ½ giro",
+    "k": "FIJA|3|64",
+    "t": "C",
+    "l": "D",
+    "g": 3,
+    "id": "64",
+    "c": true
+   },
+   {
+    "n": "Kolman",
+    "k": "FIJA|2|89",
+    "t": "C",
+    "l": "E",
+    "g": 2,
+    "id": "89",
+    "gig": "gigante"
+   },
+   {
+    "n": "Tkatchev extendido",
+    "k": "FIJA|2|16",
+    "t": "C",
+    "l": "D",
+    "g": 2,
+    "id": "16",
+    "c": true
+   },
+   {
+    "n": "Tkatchev",
+    "k": "FIJA|2|15",
+    "t": "C",
+    "l": "C",
+    "g": 2,
+    "id": "15"
+   },
+   {
+    "n": "Impulso atrás metiendo piernas a la suspensión dorsal",
+    "k": "FIJA|3|81",
+    "t": "C",
+    "l": "C",
+    "g": 3,
+    "id": "81"
+   },
+   {
+    "n": "Molino checo",
+    "k": "FIJA|1|70",
+    "t": "C",
+    "l": "D",
+    "g": 1,
+    "id": "70"
+   },
+   {
+    "n": "Watanabe",
+    "k": "FIJA|4|41",
+    "t": "C",
+    "l": "E",
+    "g": 4,
+    "id": "41"
+   }
+  ]
+ },
+ "p": {
+  "balPiso": true
+ },
+ "alias": {
+  "FIG|PISO|doble mortal en v adelante": "PISO|2|17"
+ }
+}
