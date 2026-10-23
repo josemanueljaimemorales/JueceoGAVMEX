@@ -573,23 +573,6 @@ function save(){
   try{localStorage.setItem(LOCAL,JSON.stringify({atletas:S.atletas,alias:S.alias,bajas:S.bajas,obligatorios:S.obl,orden:ORDER,guardado:new Date().toISOString()}));setSync('ok','Guardado en este equipo');}
   catch(e){console.error(e);setSync('warn','No se pudo guardar: memoria del navegador llena');}
 }
-// Respaldo: archivo con todas las rutinas de este equipo, para pasarlas a otro equipo o no perderlas.
-function descargarRespaldo(){
-  const txt=localStorage.getItem(LOCAL)||'{}', a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));
-  a.download=`Respaldo rutinas ${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
-}
-function cargarRespaldo(){
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
-  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;
-    try{const d=JSON.parse(await f.text());if(!d||typeof d.atletas!=='object')throw new Error('formato');
-      const n=Object.keys(d.atletas).length+Object.keys(d.obligatorios?.atletas||{}).length;
-      if(!confirm(`El respaldo trae ${n} atleta(s). Se reemplazan TODAS las rutinas de este equipo. ¿Continuar?`))return;
-      cargarEstado(d);save();ui.view='menu';render();alert('Respaldo cargado.');
-    }catch(e){alert('Ese archivo no es un respaldo de rutinas.');}};
-  inp.click();
-}
 function cargarEstado(d){
   S={atletas:d?.atletas||{},alias:d?.alias||{},bajas:d?.bajas||[],obl:d?.obligatorios||d?.obl||{atletas:{},orden:[],bajas:[]}};
   delete S.obl.vista; S.obl.orden=S.obl.orden||[]; S.obl.bajas=S.obl.bajas||[]; S.obl.atletas=S.obl.atletas||{};
@@ -609,7 +592,7 @@ function buildVista(n){
 /* ---------- vistas ---------- */
 function render(){if(ui.view==='olist')return renderOList();if(ui.view==='oath')return renderOAth();ui.view==='menu'?renderMenu():ui.view==='list'?renderList():renderAthlete();}
 // Inicio: crear rutina libre, revisión de obligatorios, documentos vigentes (Código FIG y Programa USAG),
-// sugerencias y respaldo. Los enlaces de los documentos están en config.js (JUECEO.docs).
+// imprimir o descargar las rutinas y sugerencias. Los enlaces de los documentos están en config.js (JUECEO.docs).
 function renderMenu(){
   const D=(window.JUECEO&&window.JUECEO.docs)||{}, lnk=(u,t,c)=>u?`<a class="${c}" href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
   root.innerHTML=`<header class="hero"><div class="hero-in">
@@ -625,8 +608,8 @@ function renderMenu(){
     <div class="tile t-doc"><img src="img/usag.png" alt=""><span class="tx"><b>Programa USAG vigente</b><small>Programa de Desarrollo Varonil 2025–2028 · Manual de Competencia Juvenil (FMG)</small>
       <span class="docbtns">${lnk(D.usag,'Abrir','dbtn')}</span></span></div>
   </div>
-  <div class="home-pie"><button class="btn" data-act="sugerir">✉ Enviar sugerencia</button><button class="btn ghost" data-act="respaldo">Descargar respaldo</button><button class="btn ghost" data-act="restaurar">Cargar respaldo</button>
-    <small>Tus rutinas se guardan solo en este equipo. Descarga un respaldo de vez en cuando, o para pasarlas a otro celular o compu.</small></div>`;
+  <div class="home-pie"><button class="btn" data-act="print">Imprimir o guardar en PDF</button><button class="btn" data-act="export">Descargar en Excel</button><button class="btn ghost" data-act="sugerir">✉ Enviar sugerencia</button>
+    <small>Tus rutinas se guardan en este equipo. Imprímelas o descárgalas cuando las necesites (una hoja por atleta; en el diálogo de impresión elige "Guardar como PDF").</small></div>`;
 }
 function renderList(){
   let h=`<div class="top"><button class="back" data-act="menu">← Inicio</button><h1>Rutinas libres</h1><span class="sync ${syncState[0]}">${esc(syncState[1])}</span></div>`;
@@ -640,8 +623,8 @@ function renderList(){
   for(const n of ORDER){const a=S.atletas[n];if(!a)continue;const t=totals(n);
     if(ui.delMode){h+=`<button class="card del" data-act="delask" data-v="${esc(n)}"><span><b>${esc(n)}</b><span class="lv">${esc(a.nivel)}</span></span><span class="xdel">Eliminar</span></button>`;continue;}
     h+=`<button class="card" data-act="open" data-v="${esc(n)}"><span><b>${esc(n)}</b><span class="lv">${esc(a.nivel)}</span></span><span class="aa">${f1(t.aa)}${APS.reduce((x,[k])=>x+nAv(t[k]),0)?`<small class="warn"> ⚠${APS.reduce((x,[k])=>x+nAv(t[k]),0)}</small>`:''}</span></button>`;}
-  h+=`</div><div class="actions"><button class="btn" data-act="export">Descargar Excel actualizado</button></div>`;
-  h+=`<div class="actions printbar"><button class="btn" data-act="print">Imprimir rutinas</button><small>Una hoja tamaño carta horizontal por atleta. En el diálogo elige "Guardar como PDF".</small></div>`;
+  h+=`</div><div class="actions"><button class="btn" data-act="export">Descargar en Excel</button></div>`;
+  h+=`<div class="actions printbar"><button class="btn" data-act="print">Imprimir o guardar en PDF</button><small>Una hoja tamaño carta horizontal por atleta. En el diálogo elige "Guardar como PDF".</small></div>`;
   root.innerHTML=h;
 }
 function metaLine(r,res,i){
@@ -746,8 +729,6 @@ root.addEventListener('click',e=>{
   if(act==='list'){ui.view='list';ui.open=-1;return render();}
   if(act==='ap'){ui.ap=el.dataset.v;ui.open=-1;ui.q='';ui.replace=-1;return render();}
   if(act==='export')return exportExcel();
-  if(act==='respaldo')return descargarRespaldo();
-  if(act==='restaurar')return cargarRespaldo();
   if(act==='sugerir')return window.abrirSugerencia&&window.abrirSugerencia();
   if(act==='menu'){ui.view='menu';return render();}
   if(act==='libres'){ui.view='list';ui.delMode=false;ui.adding=false;return render();}

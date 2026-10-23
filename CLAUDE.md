@@ -10,7 +10,7 @@ claro y sin relleno. Ver README.md.
   es el panel. La contraseña del panel es `CLAVE_ADMIN` en las propiedades del script: nunca en el repo ni en mensajes.
 - `app/editor.js`/`app/editor.css` vienen de `pruebanuevappakc/modulos/rutinas/editor.*`. Para traer mejoras: copiar los cambios
   del cálculo/buscador y conservar lo de aquí (sin Excel de atletas ni "Volver a cargar del Excel", sin logos ni "AKC" en
-  la impresión, `iniciarEditor(cat,obl)` en lugar de `init()`, guardado solo local con respaldo). Al cambiar
+  la impresión, `iniciarEditor(cat,obl)` en lugar de `init()`, guardado solo local, sin respaldo para el juez: solo imprimir/PDF y Excel). Al cambiar
   `elementos.json`/`obligatorios.json` allá, copiarlos a `app/datos/`.
 - Al cambiar JS/CSS, subir el `?v=` en `app/index.html`/`app/admin.html` y `CACHE` en `app/sw.js`.
 - Sin datos de atletas de AKC. Probar pantalla y PDF/impresión (fondo blanco, sin etiquetas de prueba) y el flujo de

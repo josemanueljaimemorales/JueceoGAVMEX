@@ -102,8 +102,10 @@ async function cargarEjemplo(){
   try{if(localStorage.getItem('jueceo_ejemplo'))return;}catch(e){return;}
   try{const d=await fetch('datos/ejemplo.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null);if(!d||!d.nombre||!d.r)return;
     if(!S.atletas[d.nombre]){const r={};
-      APS.forEach(([ap])=>{r[ap]=(d.r[ap]||[]).filter(x=>CAT[x.k]).map(x=>{const o=rowFromKey(x.k,x.n);if(x.c)o.c=true;return o;});});
-      S.atletas[d.nombre]={nivel:d.nivel||'FIG',r,p:{}};if(!ORDER.includes(d.nombre))ORDER.push(d.nombre);save();
+      // Cada fila puede venir completa (como la guarda el editor) o solo con la clave del Código y el nombre.
+      APS.forEach(([ap])=>{r[ap]=(d.r[ap]||[]).filter(x=>CAT[x.k]).map(x=>x.t?{...x}:Object.assign(rowFromKey(x.k,x.n),x.c?{c:true}:{}));});
+      S.atletas[d.nombre]={nivel:d.nivel||'FIG',r,p:{...(d.p||{})}};
+      for(const [k,v] of Object.entries(d.alias||{}))if(CAT[v]&&!S.alias[k])S.alias[k]=v;if(!ORDER.includes(d.nombre))ORDER.push(d.nombre);save();
       const ae=document.activeElement?.tagName;if(ae!=='INPUT'&&ae!=='TEXTAREA'&&ae!=='SELECT')render();}
     localStorage.setItem('jueceo_ejemplo','1');
   }catch(e){console.error(e);}
