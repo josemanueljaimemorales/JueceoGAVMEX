@@ -90,9 +90,23 @@ async function abrir(){
     if(!leer(LS_LIC))return;   // se bloqueó mientras cargaba
     gate.hidden=true;ed.hidden=false;abierto=true;
     iniciarEditor(cat,obl);
+    cargarEjemplo();
   }catch(err){console.error(err);
     gate.innerHTML=`${TITULO}<div class="box"><div class="msg bad">${escA(err.message||MSG.red)}</div><button class="btn full" onclick="location.reload()">Reintentar</button></div>`;return;}
   clearInterval(timer);timer=setInterval(()=>revisar(false),CADA);
+}
+
+// Rutina de ejemplo (datos/ejemplo.json): se agrega una sola vez por equipo, al abrir el editor. Si el juez la borra,
+// no vuelve a aparecer. Usa las funciones del editor (rowFromKey, S, ORDER, save, render).
+async function cargarEjemplo(){
+  try{if(localStorage.getItem('jueceo_ejemplo'))return;}catch(e){return;}
+  try{const d=await fetch('datos/ejemplo.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null);if(!d||!d.nombre||!d.r)return;
+    if(!S.atletas[d.nombre]){const r={};
+      APS.forEach(([ap])=>{r[ap]=(d.r[ap]||[]).filter(x=>CAT[x.k]).map(x=>{const o=rowFromKey(x.k,x.n);if(x.c)o.c=true;return o;});});
+      S.atletas[d.nombre]={nivel:d.nivel||'FIG',r,p:{}};if(!ORDER.includes(d.nombre))ORDER.push(d.nombre);save();
+      const ae=document.activeElement?.tagName;if(ae!=='INPUT'&&ae!=='TEXTAREA'&&ae!=='SELECT')render();}
+    localStorage.setItem('jueceo_ejemplo','1');
+  }catch(e){console.error(e);}
 }
 
 // Sugerencias: le llegan al administrador (pestaña Sugerencias del panel y hoja "Sugerencias").
