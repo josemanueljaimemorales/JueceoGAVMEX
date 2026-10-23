@@ -117,6 +117,8 @@ document.addEventListener('visibilitychange',()=>{if(abierto&&document.visibilit
 async function arranque(){
   if(!API||/PENDIENTE/.test(API)){gate.innerHTML=`${TITULO}<p>La app aún no está configurada.</p>`;return;}
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+  // Pide al navegador que no borre la memoria de la app (licencia y rutinas) para liberar espacio.
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
   if(!leer(LS_LIC))return pantallaCodigo();
   gate.innerHTML='<p class="loading">Revisando licencia…</p>';
   if(await revisar(true)===true)abrir();

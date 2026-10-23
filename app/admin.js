@@ -1,6 +1,6 @@
 /* Panel del administrador: códigos de acceso y quién usa la app.
-   Todo pasa por el servidor de licencias (apps-script/Codigo.gs) con la contraseña CLAVE_ADMIN, que se pide aquí y
-   se guarda solo mientras esta pestaña esté abierta (sessionStorage). La hoja de Google es el registro: también se
+   Todo pasa por el servidor de licencias (apps-script/Codigo.gs) con la contraseña CLAVE_ADMIN, que se pide una vez y
+   se queda guardada en este equipo (localStorage) hasta tocar "Salir" o hasta que cambie en Apps Script. La hoja de Google es el registro: también se
    puede editar a mano (desmarcar Activo = cancelar, borrar Equipos = liberar). */
 (function(){
 const box=document.getElementById('adm'), API=(window.JUECEO||{}).api||'';
@@ -8,12 +8,12 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const bonito=c=>String(c||'').replace(/(.{5})(?=.)/g,'$1-');
 const SS='jueceo_admin';
 let clave='', D={licencias:[],accesos:[],sugerencias:[]}, tab='lic', filtro='', nuevo=null, cargando=false;
-try{clave=sessionStorage.getItem(SS)||'';}catch(e){}
+try{clave=localStorage.getItem(SS)||'';}catch(e){}
 
 async function api(p){
   const r=await fetch(API,{method:'POST',body:JSON.stringify({...p,clave}),headers:{'Content-Type':'text/plain;charset=utf-8'}});
   const j=await r.json();
-  if(j.clave===false){clave='';try{sessionStorage.removeItem(SS);}catch(e){}login(j.error);throw new Error(j.error);}
+  if(j.clave===false){clave='';try{localStorage.removeItem(SS);}catch(e){}login(j.error);throw new Error(j.error);}
   if(!j.ok)throw new Error(j.error||'Error del servidor');
   return j;
 }
@@ -35,7 +35,7 @@ function login(msg){
   const f=document.getElementById('flog');document.getElementById('lpass').focus();
   f.onsubmit=async e=>{e.preventDefault();const m=document.getElementById('lmsg');m.className='msg';m.textContent='Entrando…';
     clave=document.getElementById('lpass').value;
-    try{await cargar();try{sessionStorage.setItem(SS,clave);}catch(e){}}catch(err){if(clave){m.className='msg bad';m.textContent=err.message||'No se pudo conectar.';}}};
+    try{await cargar();try{localStorage.setItem(SS,clave);}catch(e){}}catch(err){if(clave){m.className='msg bad';m.textContent=err.message||'No se pudo conectar.';}}};
 }
 
 async function cargar(){
@@ -107,7 +107,7 @@ const finApp=()=>location.origin+location.pathname.replace(/admin(\.html)?$/,'')
 async function accion(el){
   const a=el.dataset.a,id=el.dataset.id,l=D.licencias.find(x=>x.codigo===id);
   try{
-    if(a==='salir'){clave='';try{sessionStorage.removeItem(SS);}catch(e){}return login();}
+    if(a==='salir'){if(!confirm('¿Salir del panel en este equipo? Te pedirá la contraseña la próxima vez.'))return;clave='';try{localStorage.removeItem(SS);}catch(e){}return login();}
     if(a==='recargar')return cargar();
     if(a==='tab'){tab=el.dataset.v;return render();}
     if(a==='verAcc'){tab='acc';filtro=bonito(id);return render();}
