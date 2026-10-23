@@ -7,7 +7,7 @@ const box=document.getElementById('adm'), API=(window.JUECEO||{}).api||'';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const bonito=c=>String(c||'').replace(/(.{5})(?=.)/g,'$1-');
 const SS='jueceo_admin';
-let clave='', D={licencias:[],accesos:[]}, tab='lic', filtro='', nuevo=null, cargando=false;
+let clave='', D={licencias:[],accesos:[],sugerencias:[]}, tab='lic', filtro='', nuevo=null, cargando=false;
 try{clave=sessionStorage.getItem(SS)||'';}catch(e){}
 
 async function api(p){
@@ -40,19 +40,19 @@ function login(msg){
 
 async function cargar(){
   cargando=true;
-  try{D=await api({accion:'admin_listar',accesos:500});}finally{cargando=false;}
+  try{D=await api({accion:'admin_listar',accesos:500});D.sugerencias=D.sugerencias||[];}finally{cargando=false;}
   render();
 }
 
 function render(){
   const L=D.licencias, ahora=Date.now();
-  const act=L.filter(l=>l.estado==='ok').length;
+  const act=L.filter(l=>l.estado==='ok').length, nuevas=D.sugerencias.filter(x=>x.estado!=='atendida').length;
   const sem=new Set(D.accesos.filter(a=>!/^rechazado/.test(a.evento)&&ahora-Date.parse(a.fecha)<7*86400000).map(a=>a.codigo)).size;
   const hoy=new Set(D.accesos.filter(a=>!/^rechazado/.test(a.evento)&&new Date(a.fecha).toDateString()===new Date().toDateString()).map(a=>a.codigo)).size;
   let h=`<div class="top"><h1>Administrador</h1><button class="back" data-a="recargar">${cargando?'Actualizando…':'Actualizar'}</button><a class="back" href="./">Abrir la app</a><button class="back" data-a="salir">Salir</button></div>
   <div class="resumen"><div><b>${act}</b><small>licencias activas (de ${L.length})</small></div><div><b>${hoy}</b><small>jueces entraron hoy</small></div><div><b>${sem}</b><small>jueces en los últimos 7 días</small></div></div>
-  <div class="tabs"><button class="${tab==='lic'?'on':''}" data-a="tab" data-v="lic">Licencias</button><button class="${tab==='acc'?'on':''}" data-a="tab" data-v="acc">Accesos</button></div>`;
-  h+=tab==='lic'?vistaLic():vistaAcc();
+  <div class="tabs"><button class="${tab==='lic'?'on':''}" data-a="tab" data-v="lic">Licencias</button><button class="${tab==='acc'?'on':''}" data-a="tab" data-v="acc">Accesos</button><button class="${tab==='sug'?'on':''}" data-a="tab" data-v="sug">Sugerencias${nuevas?`<span class="n">${nuevas}</span>`:''}</button></div>`;
+  h+=tab==='lic'?vistaLic():tab==='acc'?vistaAcc():vistaSug();
   const ae=document.activeElement&&document.activeElement.id;
   box.innerHTML=h;
   if(ae==='filtro'){const f=document.getElementById('filtro');f.focus();f.setSelectionRange(f.value.length,f.value.length);}
@@ -84,6 +84,14 @@ function vistaLic(){
       <button class="btn ghost" data-a="borrar" data-id="${l.codigo}">Borrar</button></div></div>`;}
   return h+'</div>';
 }
+function vistaSug(){
+  const lista=D.sugerencias.filter(x=>coincide(x.nombre,x.codigo,bonito(x.codigo),x.texto));
+  let h=`<h2>Sugerencias de los jueces (${lista.length})</h2>${buscador()}<div class="sugs">`;
+  if(!lista.length)h+='<div class="empty">Aún no hay sugerencias.</div>';
+  for(const x of lista)h+=`<div class="sug ${x.estado==='atendida'?'atendida':''}"><div class="fila" style="display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center"><b>${esc(x.nombre||'—')}</b><small>${bonito(esc(x.codigo))}</small><small>${esc(fechaHora(x.fecha))}</small>${x.estado==='atendida'?'<span class="est">Atendida</span>':'<span class="est vencida">Nueva</span>'}</div>
+    <p>${esc(x.texto)}</p><div class="acc" style="display:flex;gap:6px;flex-wrap:wrap">${x.estado==='atendida'?`<button class="btn ghost" data-a="sugnueva" data-s="${esc(x.id)}">Marcar como nueva</button>`:`<button class="btn" data-a="sugok" data-s="${esc(x.id)}">Marcar como atendida</button>`}<button class="btn ghost" data-a="sugborrar" data-s="${esc(x.id)}">Borrar</button></div></div>`;
+  return h+'</div>';
+}
 function vistaAcc(){
   const lista=D.accesos.filter(a=>coincide(a.nombre,a.codigo,bonito(a.codigo)));
   let h=`<h2>Accesos recientes (${lista.length})</h2>${buscador()}<div class="accs">`;
@@ -105,6 +113,8 @@ async function accion(el){
     if(a==='verAcc'){tab='acc';filtro=bonito(id);return render();}
     if(a==='cerrarnuevo'){nuevo=null;return render();}
     if(a==='copiar')return copiar(bonito(id));
+    if(a==='sugok'||a==='sugnueva'||a==='sugborrar'){if(a==='sugborrar'&&!confirm('¿Borrar esta sugerencia?'))return;el.disabled=true;
+      await api({accion:'admin_sugerencia',id:el.dataset.s,...(a==='sugborrar'?{borrar:true}:{estado:a==='sugok'?'atendida':'nueva'})});return cargar();}
     if(a==='copiarmsg')return copiar(`Tu acceso a Jueceo GAV MEX (editor de rutinas para jueces):\n${finApp()}\nCódigo de licencia: ${bonito(id)}\nEl código se liga a tu celular o compu; no lo compartas. Tus rutinas se guardan en tu equipo.`);
     if(a==='cancelar'&&!confirm(`¿Cancelar el acceso de ${l.nombre}? Se le cierra la app en cuanto la abra o en máximo 30 minutos si la tiene abierta.`))return;
     if(a==='liberar'&&!confirm(`¿Liberar los ${l.equipos} equipos de ${l.nombre}? Tendrá que escribir su código otra vez en cada equipo.`))return;

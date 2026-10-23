@@ -28,7 +28,7 @@ const MSG={no:'Ese código no existe. Revisa que esté bien escrito.',
   lleno:'Este código ya se usa en el máximo de equipos permitido. Pide al administrador que libere uno.',
   red:'No se pudo conectar. Revisa tu internet e inténtalo de nuevo.',
   offline:'Hace varios días que no se revisa tu licencia. Conéctate a internet y vuelve a abrir la app.'};
-const TITULO='<h1>Jueceo GAV MEX</h1>';
+const TITULO='<div class="logos"><img src="img/fig.png" alt="FIG"><img src="img/fmg.png" alt="FMG"><img src="img/usag.png" alt="USA Gymnastics"></div><h1>JUECEO GAV MEX</h1>';
 
 // Llama al servidor de licencias. Devuelve su respuesta, o null si no hubo conexión.
 async function api(p){
@@ -94,6 +94,23 @@ async function abrir(){
     gate.innerHTML=`${TITULO}<div class="box"><div class="msg bad">${escA(err.message||MSG.red)}</div><button class="btn full" onclick="location.reload()">Reintentar</button></div>`;return;}
   clearInterval(timer);timer=setInterval(()=>revisar(false),CADA);
 }
+
+// Sugerencias: le llegan al administrador (pestaña Sugerencias del panel y hoja "Sugerencias").
+window.abrirSugerencia=function(){
+  const lic=leer(LS_LIC)||{}, m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<form class="box" autocomplete="off"><h2>Enviar sugerencia</h2>
+    <small style="color:var(--muted)">Ideas, errores en algún valor o regla, cosas que te gustaría que tuviera la app. Le llegan al administrador.</small>
+    <textarea maxlength="2000" placeholder="Escribe tu sugerencia" autocorrect="on" spellcheck="true"></textarea>
+    <div class="msg"></div><div class="actions" style="margin:0"><button class="btn" type="submit">Enviar</button><button class="btn ghost" type="button" data-x>Cancelar</button></div></form>`;
+  document.body.appendChild(m);
+  const f=m.querySelector('form'), t=m.querySelector('textarea'), msg=m.querySelector('.msg'), cerrar=()=>m.remove();
+  m.querySelector('[data-x]').onclick=cerrar; m.onclick=e=>{if(e.target===m)cerrar();}; t.focus();
+  f.onsubmit=async e=>{e.preventDefault();const texto=t.value.trim();if(!texto){msg.className='msg bad';msg.textContent='Escribe tu sugerencia.';return;}
+    const b=f.querySelector('[type=submit]');b.disabled=true;msg.className='msg';msg.textContent='Enviando…';
+    const r=await api({accion:'sugerir',codigo:lic.codigo,equipo:equipo(),texto});
+    if(r&&r.ok){msg.className='msg ok';msg.textContent='¡Gracias! Tu sugerencia se envió.';t.disabled=true;b.hidden=true;m.querySelector('[data-x]').textContent='Cerrar';return;}
+    b.disabled=false;msg.className='msg bad';msg.textContent=!r?MSG.red:r.error==='Acción desconocida.'?'Las sugerencias todavía no están activas. Inténtalo más tarde.':(r.error||MSG[r.motivo]||MSG.red);};
+};
 
 document.addEventListener('visibilitychange',()=>{if(abierto&&document.visibilityState==='visible'&&Date.now()-ultimaRevision>5*60000)revisar(false);});
 
